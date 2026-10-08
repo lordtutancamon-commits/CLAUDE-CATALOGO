@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Catálogo</title>
+<style>
+:root{--fundo:#14161a;--painel:#1d2127;--linha:#2c323b;--texto:#ece8e1;--suave:#9aa0a8;--ouro:#d9a441;--foto:220px;--video:360px}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+.sh .seta{padding:2px 9px}
+button:disabled{opacity:.35;cursor:default}
+button:disabled:hover{border-color:var(--linha)}
+body{margin:0;background:var(--fundo);color:var(--texto);font:15px/1.5 system-ui,"Segoe UI",sans-serif}
+h1,h2,h3{font-family:"Iowan Old Style","Palatino Linotype",Georgia,serif;font-weight:600;margin:0}
+button,input,textarea{font:inherit;color:inherit}
+button,.bt{background:var(--painel);border:1px solid var(--linha);border-radius:6px;padding:7px 12px;cursor:pointer;display:inline-block}
+button:hover,.bt:hover{border-color:var(--ouro)}
+button.p{background:var(--ouro);color:#1a1405;border-color:var(--ouro);font-weight:600}
+button.x{color:#e8836f}
+:focus-visible{outline:2px solid var(--ouro);outline-offset:2px}
+a.mv{cursor:pointer;color:inherit;text-decoration:none}
+input,textarea,select{background:#101215;border:1px solid var(--linha);border-radius:6px;padding:8px 10px;width:100%}
+input[type=range]{padding:0;width:140px;accent-color:var(--ouro)}
+header{position:sticky;top:0;z-index:5;background:rgba(20,22,26,.94);backdrop-filter:blur(6px);border-bottom:1px solid var(--linha);padding:12px 20px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+header h1{font-size:24px;cursor:pointer;margin-right:auto}
+header input[type=search]{width:220px}
+main{padding:20px;max-width:1600px;margin:auto}
+.tags{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+main>.tags{margin-bottom:16px}
+.tag{border-radius:99px;padding:2px 11px;font-size:13px;border:1px solid var(--linha);background:var(--painel)}
+.tag.on{background:var(--ouro);color:#1a1405;border-color:var(--ouro)}
+.grade{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:16px}
+.card{cursor:pointer;background:var(--painel);border:1px solid var(--linha);border-radius:8px;overflow:hidden}
+.card:hover{border-color:var(--ouro)}
+.card{position:relative}
+.del{position:absolute;top:6px;right:6px;padding:2px 8px;font-size:12px;opacity:0;background:rgba(20,22,26,.9)}
+.card:hover .del,.card:focus-within .del{opacity:1}
+@media(hover:none){.del{opacity:1}}
+.card .img{aspect-ratio:3/4;background:#101215;display:grid;place-items:center;font:600 56px Georgia,serif;color:var(--linha);overflow:hidden}
+.card .img img{width:100%;height:100%;object-fit:cover}
+.card .nome{padding:10px 12px}.card small{color:var(--suave);display:block}
+.vazio{color:var(--suave)}
+.falha{color:var(--suave);font-size:13px;padding:8px}
+.topo{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+.topo h2{font-size:30px}.esp{flex:1}
+.ctl{display:flex;gap:18px;align-items:center;flex-wrap:wrap;margin-bottom:18px;padding:10px 0;border-block:1px solid var(--linha)}
+.rg{display:flex;gap:8px;align-items:center;color:var(--suave)}
+.sites{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:-6px 0 20px}
+.site{display:inline-flex;align-items:center;border:1px solid var(--linha);border-radius:99px;padding:2px 4px 2px 12px;background:var(--painel)}
+.site a{color:var(--texto)}
+.site button{border:0;background:none;padding:0 8px}
+figure.it{margin:0}
+.leg{display:block;font-size:12px;color:var(--suave);text-decoration:none;margin-top:3px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.leg:hover{color:var(--ouro)}
+.sec{margin-bottom:28px}
+.sh{display:flex;gap:8px;align-items:center;margin-bottom:10px;flex-wrap:wrap}
+.sh h3{font-size:20px;margin-right:auto;cursor:pointer}
+.sh h3 small{font:13px system-ui;color:var(--suave)}
+.corpo{display:grid;gap:10px}
+.fotos,.videos{display:flex;flex-wrap:wrap;gap:8px;align-items:flex-start}
+.it{position:relative}
+.fotos .it img{height:var(--foto);width:auto;min-width:70px;max-width:100%;border-radius:6px;cursor:zoom-in;display:block;background:#101215}
+.videos .it iframe,.videos .it video{width:var(--video);aspect-ratio:16/9;max-width:100%;border:0;border-radius:6px;background:#000;display:block}
+.videos .tw iframe{aspect-ratio:auto!important;width:550px!important;zoom:var(--twz,1);max-width:calc((100vw - 40px)/var(--twz,1))!important;height:560px;color-scheme:dark}
+.vert iframe,.vert video{aspect-ratio:9/16!important;width:calc(var(--video)*.5625)!important}
+.tb{position:absolute;top:6px;right:6px;display:flex;gap:4px;opacity:0;transition:opacity .15s}
+.it:hover .tb,.it:focus-within .tb{opacity:1}
+@media(hover:none){.tb{opacity:1}}
+.tb button,.mv{padding:2px 8px;font-size:12px;background:rgba(20,22,26,.88)}
+.mv{border:1px solid var(--linha);border-radius:6px;cursor:grab;user-select:none}
+.fotos .it[draggable=true]{cursor:grab}
+.it.arr{opacity:.35}
+.rz{position:absolute;right:3px;bottom:3px;width:20px;height:20px;line-height:18px;text-align:center;font-size:11px;cursor:nwse-resize;opacity:0;background:rgba(20,22,26,.9);border:1px solid var(--linha);border-radius:4px;user-select:none;touch-action:none;z-index:2}
+.it:hover .rz,.it:focus-within .rz{opacity:1}
+@media(hover:none){.rz{opacity:1}}
+.sobre-e{box-shadow:-5px 0 0 var(--ouro)}
+.sobre-d{box-shadow:5px 0 0 var(--ouro)}
+body.arrastando iframe,body.arrastando video{pointer-events:none}
+dialog.dlg{background:var(--painel);color:var(--texto);border:1px solid var(--linha);border-radius:10px;padding:20px;width:min(520px,92vw)}
+dialog::backdrop{background:rgba(0,0,0,.65)}
+dialog label{display:block;margin:14px 0 4px;color:var(--suave);font-size:13px}
+.acoes{display:flex;justify-content:flex-end;gap:8px;margin-top:18px}
+.lb{position:fixed;inset:0;background:rgba(8,9,11,.94);z-index:20;display:grid;place-items:center}
+.lb img{max-width:92vw;max-height:90vh;object-fit:contain}
+.lb button{position:absolute}
+.lbp{left:14px;top:50%}.lbn{right:14px;top:50%}.lbx{right:14px;top:14px}
+.lb span{position:absolute;bottom:14px;color:var(--suave)}
+#aviso{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);width:max-content;max-width:90vw;text-align:center;background:var(--ouro);color:#1a1405;padding:8px 16px;border-radius:6px;font-weight:600;opacity:0;pointer-events:none;transition:opacity .2s;z-index:30}
+#aviso.on{opacity:1}
+#sinc{font-size:12px;color:var(--suave)}
+</style>
+</head>
+<body>
+<header>
+<h1 onclick="location.hash='#/'">Catálogo</h1>
+<input id="busca" type="search" placeholder="Buscar pelo nome" aria-label="Buscar pelo nome">
+<button class="p" id="nova">Nova atriz</button>
+<button id="todas" onclick="location.hash='#/fotos'">Fotos e vídeos</button>
+<button id="exp">Exportar backup</button>
+<label class="bt">Importar backup<input id="imp" type="file" accept="application/json" hidden></label>
+<button id="env" title="Enviar o catálogo deste aparelho para o Gist">Enviar para a nuvem</button>
+<button id="bai" title="Baixar o catálogo do Gist e substituir o deste aparelho">Baixar da nuvem</button>
+<button id="cfgn" title="Configurar token e ID do gist" aria-label="Configurar nuvem">⚙</button>
+<span id="sinc" title="Última sincronização feita neste aparelho"></span>
+</header>
+<main></main>
+<div id="aviso" role="status"></div>
+<script>
+const $=s=>document.querySelector(s),K='catalogo-v1',uid=()=>Math.random().toString(36).slice(2,9),http=u=>/^https?:\/\//i.test(u||'');
+let db;try{db=JSON.parse(localStorage.getItem(K))}catch(e){}
+db=db&&Array.isArray(db.atrizes)?db:{atrizes:[]};db.cfg=db.cfg||{foto:220,video:360};
+const salvar=()=>{try{localStorage.setItem(K,JSON.stringify(db))}catch(e){aviso('Não foi possível salvar neste navegador. Exporte um backup.')}};
+const aplicar=()=>{const r=document.documentElement.style;r.setProperty('--foto',db.cfg.foto+'px');r.setProperty('--video',db.cfg.video+'px');r.setProperty('--twz',(db.cfg.video/550).toFixed(3))};
+let tAviso;function aviso(t,ms){const a=$('#aviso');a.textContent=t;a.classList.add('on');clearTimeout(tAviso);tAviso=setTimeout(()=>a.classList.remove('on'),ms||2600)}
+function h(t,p,...f){const e=document.createElement(t);for(const k in p||{}){const v=p[k];if(k==='on')for(const ev in v)e.addEventListener(ev,v[ev]);else if(k in e)e[k]=v;else e.setAttribute(k,v)}e.append(...f.flat().filter(x=>x!=null&&x!==false));return e}
+function img(u,alt){const i=h('img',{alt:alt||'',loading:'lazy',referrerPolicy:'no-referrer',src:u});i.onerror=()=>i.replaceWith(h('a',{href:u,target:'_blank',rel:'noopener noreferrer',className:'falha'},'Imagem não carregou. Abrir link'));return i}
+function form(titulo,campos,ok='Salvar'){return new Promise(res=>{
+ const d=h('dialog',{className:'dlg'}),f=h('form',{method:'dialog'});
+ const ins=campos.map(c=>{const p={value:c.v||'',placeholder:c.ph||'',name:c.k};if(c.area)p.rows=8;if(c.t){p.type=c.t;p.autocomplete='off'}return c.sel?h('select',{name:c.k},c.sel.map(([v,t])=>h('option',{value:v},t))):h(c.area?'textarea':'input',p)});
+ f.append(h('h3',null,titulo),...campos.flatMap((c,i)=>[h('label',null,c.l),ins[i]]),h('div',{className:'acoes'},h('button',{type:'button',on:{click:()=>d.close()}},'Cancelar'),h('button',{className:'p',type:'submit'},ok)));
+ f.addEventListener('submit',()=>res(Object.fromEntries(campos.map((c,i)=>[c.k,ins[i].value.trim()]))));
+ d.addEventListener('close',()=>{d.remove();res(null)});
+ d.append(f);document.body.append(d);d.showModal();ins[0].focus()})}
+function analisar(t){const vistos=new Set(),out=[],fr=[];
+ t=t.replace(/<script[\s\S]*?<\/script>/gi,' ').replace(/<blockquote[^>]*twitter-tweet[\s\S]*?<\/blockquote>/gi,b=>{const m=b.match(/status\/(\d+)/);return m?' https://x.com/i/status/'+m[1]+' ':' '});
+ t=t.replace(/<iframe[^>]*?\ssrc=["']([^"']+)["'][^>]*>/gi,(_,s)=>{s=s.startsWith('//')?'https:'+s:s;fr.push(s);return ' '+s+' '});
+ for(let u of t.match(/https?:\/\/[^\s"'<>]+/g)||[]){u=u.replace(/[).,;]+$/,'');let c,m;if(/\.(js|css)(\?|#|$)/i.test(u))continue;
+  if(m=u.match(/\/\/(?:www\.|mobile\.)?(?:twitter|x)\.com\/[^\/\s]+\/status\/(\d+)/i))c={tipo:'iframe',tw:true,url:'https://platform.twitter.com/embed/Tweet.html?dnt=true&theme=dark&id='+m[1]};
+  else
+  if(m=u.match(/redgifs\.com\/(?:watch|ifr)\/([a-z0-9]+)/i))c={tipo:'iframe',url:'https://www.redgifs.com/ifr/'+m[1].toLowerCase()};
+  else if(m=u.match(/(?:youtube\.com\/(?:watch\?(?:[^#]*&)?v=|shorts\/|embed\/)|youtu\.be\/)([\w-]{11})/))c={tipo:'iframe',url:'https://www.youtube.com/embed/'+m[1]};
+  else if(m=u.match(/vimeo\.com\/(?:video\/)?(\d+)/))c={tipo:'iframe',url:'https://player.vimeo.com/video/'+m[1]};
+  else if(m=u.match(/streamable\.com\/(?:e\/)?([a-z0-9]+)/i))c={tipo:'iframe',url:'https://streamable.com/e/'+m[1]};
+  else if(m=u.match(/dailymotion\.com\/(?:embed\/)?video\/(\w+)/i))c={tipo:'iframe',url:'https://www.dailymotion.com/embed/video/'+m[1]};
+  else if(/\.(mp4|webm|mov|m4v|ogv|m3u8)(\?|#|$)/i.test(u))c={tipo:'video',url:u};
+  else if(/\.(jpe?g|png|gif|webp|avif|bmp|svg)(\?|#|$)/i.test(u))c={tipo:'img',url:u};
+  else c={tipo:fr.includes(u)?'iframe':'auto',url:u};
+  if(!vistos.has(c.url)){vistos.add(c.url);out.push({id:uid(),v:false,...c})}}
+ return out}
+let busca='',tagSel='';
+function ir(){if(location.hash==='#/fotos'){galeria();scrollTo(0,0);return}const m=location.hash.match(/^#\/a\/(\w+)/),a=m&&db.atrizes.find(x=>x.id===m[1]);a?pagina(a):inicio();scrollTo(0,0)}
+addEventListener('hashchange',ir);
+const trocar=(...n)=>$('main').replaceChildren(...n.flat().filter(Boolean));
+let emb=false,mostrar='todos';
+function galeria(){
+ const ts=[...new Set(db.atrizes.flatMap(a=>a.tags||[]))].sort();
+ if(tagSel&&!ts.includes(tagSel))tagSel='';
+ const sel=db.atrizes.filter(a=>(!tagSel||(a.tags||[]).includes(tagSel))&&a.nome.toLowerCase().includes(busca.toLowerCase())).sort((a,b)=>a.nome.localeCompare(b.nome));
+ const pegar=f=>sel.flatMap(a=>a.secoes.flatMap(s=>s.itens.filter(i=>http(i.url)&&f(i)).map(i=>({a,i}))));
+ const ord=mostrar==='videos'?[]:pegar(i=>i.tipo==='img'),vids=mostrar==='fotos'?[]:pegar(i=>i.tipo==='iframe'||i.tipo==='video');
+ const emba=l=>{for(let k=l.length-1;k>0;k--){const j=Math.floor(Math.random()*(k+1));[l[k],l[j]]=[l[j],l[k]]}};
+ if(emb){emba(ord);emba(vids)}
+ const lista=ord.map(x=>x.i);
+ const leg=a=>h('a',{className:'leg',href:'#/a/'+a.id},a.nome);
+ const n=(q,s,p)=>q+(q===1?s:p);
+ trocar(
+  ts.length?h('div',{className:'tags'},h('button',{className:'tag'+(tagSel?'':' on'),on:{click:()=>{tagSel='';galeria()}}},'Todas'),ts.map(t=>h('button',{className:'tag'+(tagSel===t?' on':''),on:{click:()=>{tagSel=t;galeria()}}},t))):null,
+  h('div',{className:'topo'},h('button',{on:{click:()=>location.hash='#/'}},'‹ Voltar'),h('h2',null,'Todas as fotos e vídeos'),h('span',{className:'esp'}),
+   h('button',{on:{click:()=>{emb=true;galeria()}}},'Embaralhar'),h('button',{on:{click:()=>{emb=false;galeria()}}},'Por atriz')),
+  h('div',{className:'ctl'},
+   h('div',{className:'tags'},[['todos','Tudo'],['fotos','Só fotos'],['videos','Só vídeos']].map(([k,t])=>h('button',{className:'tag'+(mostrar===k?' on':''),on:{click:()=>{mostrar=k;galeria()}}},t))),
+   mostrar!=='videos'?range('Tamanho das fotos','foto',100,500):null,mostrar!=='fotos'?range('Tamanho dos vídeos','video',200,800):null,
+   h('span',{className:'vazio'},n(ord.length,' foto',' fotos')+' · '+n(vids.length,' vídeo',' vídeos'))),
+  ord.length?h('div',{className:'fotos'},ord.map((x,k)=>{const im=img(x.i.url);im.draggable=false;im.addEventListener('click',()=>lightbox(lista,k));
+   return h('figure',{className:'it'},im,leg(x.a))})):null,
+  vids.length?h('div',{className:'videos',style:'margin-top:20px'},vids.map(x=>{
+   const f=h('figure',{className:'it'+(x.i.v?' vert':'')+(x.i.tw?' tw':'')},x.i.tipo==='iframe'?quadro(x.i.url):videoEl(x.i.url),leg(x.a),
+    h('div',{className:'tb'},h('button',{title:'Alternar vertical e horizontal',on:{click:()=>{x.i.v=!x.i.v;salvar();f.classList.toggle('vert')}}},'Girar')));
+   if(x.i.z)f.style.zoom=x.i.z;return f})):null,
+  !ord.length&&!vids.length?h('p',{className:'vazio'},'Nada encontrado. Use a busca e as tags para filtrar por atriz.'):null)}
+function inicio(){
+ const todas=[...new Set(db.atrizes.flatMap(a=>a.tags||[]))].sort();
+ if(tagSel&&!todas.includes(tagSel))tagSel='';
+ const lista=db.atrizes.filter(a=>(!tagSel||(a.tags||[]).includes(tagSel))&&a.nome.toLowerCase().includes(busca.toLowerCase())).sort((a,b)=>a.nome.localeCompare(b.nome));
+ trocar(
+  todas.length?h('div',{className:'tags'},h('button',{className:'tag'+(tagSel?'':' on'),on:{click:()=>{tagSel='';inicio()}}},'Todas'),todas.map(t=>h('button',{className:'tag'+(tagSel===t?' on':''),on:{click:()=>{tagSel=t;inicio()}}},t))):null,
+  lista.length?h('div',{className:'grade'},lista.map(card)):h('p',{className:'vazio'},db.atrizes.length?'Nenhum resultado.':'O catálogo está vazio. Clique em "Nova atriz" para começar.'))}
+function card(a){const n=a.secoes.reduce((t,s)=>t+s.itens.length,0),abrir=()=>location.hash='#/a/'+a.id;
+ return h('div',{className:'card',tabIndex:0,on:{click:abrir,keydown:e=>{if(e.key==='Enter'&&e.target===e.currentTarget)abrir()}}},
+  h('button',{className:'x del',title:'Excluir atriz',on:{click:e=>{e.stopPropagation();if(confirm('Excluir '+a.nome+' e todo o conteúdo?')){db.atrizes=db.atrizes.filter(x=>x!==a);salvar();inicio()}}}},'✕'),
+  h('div',{className:'img'},http(a.capa)?img(a.capa,a.nome):h('span',null,a.nome.slice(0,1).toUpperCase())),
+  h('div',{className:'nome'},h('strong',null,a.nome),h('small',null,n+(n===1?' item':' itens'))))}
+const parseTags=s=>[...new Set((s||'').split(',').map(x=>x.trim()).filter(Boolean))];
+const host=u=>{try{return new URL(u).hostname.replace(/^www\./,'')}catch(e){return u}};
+function sitesView(a){a.sites=a.sites||[];
+ return h('div',{className:'sites'},h('strong',null,'Sites'),
+  a.sites.map(x=>h('span',{className:'site'},h('a',{href:x.url,target:'_blank',rel:'noopener noreferrer',title:x.url},x.titulo),h('button',{className:'x',title:'Remover site',on:{click:()=>{a.sites=a.sites.filter(y=>y!==x);salvar();pagina(a)}}},'✕'))),
+  h('button',{on:{click:()=>addSite(a)}},'+ Adicionar site'))}
+async function addSite(a){const r=await form('Adicionar sites',[{k:'t',l:'Cole um ou mais links',area:1,ph:'https://...'},{k:'n',l:'Nome do site (opcional, vale quando for um link só)'}],'Adicionar');
+ if(!r||!r.t)return;const ls=[...new Set((r.t.match(/https?:\/\/[^\s"'<>]+/g)||[]).map(u=>u.replace(/[).,;]+$/,'')))];
+ if(!ls.length){aviso('Nenhum link encontrado');return}
+ a.sites=a.sites||[];const ex=new Set(a.sites.map(x=>x.url));
+ ls.filter(u=>!ex.has(u)).forEach(u=>a.sites.push({id:uid(),url:u,titulo:(ls.length===1&&r.n)||host(u)}));
+ salvar();pagina(a)}
+async function nova(){const r=await form('Nova atriz',[{k:'nome',l:'Nome'},{k:'capa',l:'Link da imagem de capa',ph:'https://...'},{k:'tags',l:'Tags (separadas por vírgula)'}]);
+ if(!r||!r.nome)return;const a={id:uid(),nome:r.nome,capa:r.capa,tags:parseTags(r.tags),secoes:[{id:uid(),titulo:'Geral',itens:[]}]};db.atrizes.push(a);salvar();location.hash='#/a/'+a.id}
+async function editar(a){const r=await form('Editar atriz',[{k:'nome',l:'Nome',v:a.nome},{k:'capa',l:'Link da imagem de capa',v:a.capa},{k:'tags',l:'Tags (separadas por vírgula)',v:(a.tags||[]).join(', ')}]);
+ if(!r||!r.nome)return;Object.assign(a,{nome:r.nome,capa:r.capa,tags:parseTags(r.tags)});salvar();pagina(a)}
+async function novaSecao(a){const r=await form('Nova seção',[{k:'t',l:'Nome da seção',ph:'Ex.: Ensaio 2024'}],'Criar');if(!r||!r.t)return;const it=/https?:\/\//.test(r.t)?analisar(r.t):[];a.secoes.push({id:uid(),titulo:it.length?'Geral':r.t,itens:it});salvar();pagina(a)}
+async function addLinks(a,s){const r=await form('Adicionar links',[{k:'t',l:'Cole links de fotos e vídeos ou códigos de embed (vários de uma vez)',area:1,ph:'https://...'},{k:'modo',l:'Links que o programa não reconhece',sel:[['auto','Automático: tenta foto, depois vídeo, depois página incorporada'],['img','Tratar como foto'],['video','Tratar como arquivo de vídeo'],['iframe','Tratar como página incorporada (iframe)']]}],'Adicionar');if(!r||!r.t)return;
+ const ex=new Set(a.secoes.flatMap(x=>x.itens.map(i=>i.url))),novos=analisar(r.t).map(i=>i.tipo==='auto'&&r.modo!=='auto'?{...i,tipo:r.modo}:i).filter(i=>!ex.has(i.url));
+ s.itens.push(...novos);salvar();pagina(a);aviso(novos.length?novos.length+' item(ns) adicionado(s)':'Nenhum link novo encontrado')}
+function range(l,k,min,max){return h('label',{className:'rg'},l,h('input',{type:'range',min,max,value:db.cfg[k],on:{input:e=>{db.cfg[k]=+e.target.value;aplicar()},change:salvar}}))}
+function pagina(a){
+ const fotos=a.secoes.flatMap(s=>s.itens.filter(i=>i.tipo==='img'));
+ trocar(
+  h('div',{className:'topo'},h('button',{on:{click:()=>location.hash='#/'}},'‹ Voltar'),h('h2',null,a.nome),h('div',{className:'tags'},(a.tags||[]).map(t=>h('span',{className:'tag'},t))),h('span',{className:'esp'}),
+   h('button',{on:{click:()=>editar(a)}},'Editar'),
+   h('button',{className:'x',on:{click:()=>{if(confirm('Excluir '+a.nome+' e todo o conteúdo?')){db.atrizes=db.atrizes.filter(x=>x!==a);salvar();location.hash='#/'}}}},'Excluir')),
+  h('div',{className:'ctl'},
+   h('div',{className:'tags'},[['todos','Tudo'],['fotos','Só fotos'],['videos','Só vídeos']].map(([k,t])=>h('button',{className:'tag'+(mostrar===k?' on':''),on:{click:()=>{mostrar=k;pagina(a)}}},t))),
+   range('Tamanho das fotos','foto',100,500),range('Tamanho dos vídeos','video',200,800),
+   h('button',{on:{click:()=>{a.secoes.forEach(s=>s.fechada=true);salvar();pagina(a)}}},'Recolher tudo'),
+   h('button',{on:{click:()=>{a.secoes.forEach(s=>s.fechada=false);salvar();pagina(a)}}},'Expandir tudo'),
+   h('button',{className:'p',on:{click:()=>novaSecao(a)}},'Nova seção')),
+  sitesView(a),
+  ...(a.secoes.length?a.secoes.map(s=>secao(a,s,fotos)):[h('p',{className:'vazio'},'Crie uma seção (por exemplo, "Ensaio 2024") e cole os links.')]))}
+function secao(a,s,fotos){
+ const fil=mostrar==='todos'?s.itens:s.itens.filter(i=>(i.tipo==='img')===(mostrar==='fotos'));
+ const f=fil.filter(i=>i.tipo==='img'),v=fil.filter(i=>i.tipo!=='img');
+ const corpo=h('div',{className:'corpo',hidden:!!s.fechada,on:{dragover:e=>{if(arr)e.preventDefault()},drop:e=>{if(!arr)return;e.preventDefault();moverFim(arr,s)}}},fil.length?[f.length?h('div',{className:'fotos'},f.map(i=>item(a,s,i,fotos))):null,v.length?h('div',{className:'videos'},v.map(i=>item(a,s,i,fotos))):null]:h('p',{className:'vazio'},s.itens.length?'Nenhum item deste tipo nesta seção.':'Seção vazia. Use "Adicionar links".'));
+ const seta=h('button',{className:'seta',title:'Recolher ou expandir',on:{click:()=>tog()}},s.fechada?'▸':'▾');
+ const tog=()=>{s.fechada=!s.fechada;corpo.hidden=s.fechada;seta.textContent=s.fechada?'▸':'▾';salvar()};
+ const k=a.secoes.indexOf(s),troca=d=>{const j=k+d;if(j<0||j>=a.secoes.length)return;[a.secoes[k],a.secoes[j]]=[a.secoes[j],a.secoes[k]];salvar();pagina(a)};
+ return h('section',{className:'sec'},h('div',{className:'sh'},seta,
+  h('h3',{tabIndex:0,title:'Recolher ou expandir',on:{click:tog}},s.titulo,h('small',null,' '+fil.length)),
+  h('button',{title:'Mover seção para cima',disabled:k===0,on:{click:()=>troca(-1)}},'↑'),
+  h('button',{title:'Mover seção para baixo',disabled:k===a.secoes.length-1,on:{click:()=>troca(1)}},'↓'),
+  h('button',{on:{click:()=>addLinks(a,s)}},'Adicionar links'),
+  h('button',{on:{click:async()=>{const r=await form('Renomear seção',[{k:'t',l:'Nome',v:s.titulo}]);if(r&&r.t){s.titulo=r.t;salvar();pagina(a)}}}},'Renomear'),
+  h('button',{className:'x',on:{click:()=>{if(confirm('Excluir a seção "'+s.titulo+'"?')){a.secoes=a.secoes.filter(x=>x!==s);salvar();pagina(a)}}}},'Excluir')),corpo)}
+let hlsP;const hls=()=>hlsP||(hlsP=new Promise(r=>document.head.append(h('script',{src:'https://cdn.jsdelivr.net/npm/hls.js@1',onload:r}))));
+function videoEl(u){const v=h('video',{controls:true,preload:'metadata'});
+ if(/\.m3u8(\?|#|$)/i.test(u)&&!v.canPlayType('application/vnd.apple.mpegurl'))hls().then(()=>{if(window.Hls){const H=new Hls();H.loadSource(u);H.attachMedia(v)}});else v.src=u;return v}
+const quadro=u=>h('iframe',{loading:'lazy',allowFullscreen:true,frameBorder:'0',scrolling:'no',src:u});
+let rr;
+function sonda(a,i){const p=h('img',{referrerPolicy:'no-referrer',src:i.url});p.style.maxWidth='160px';
+ p.onload=()=>{i.tipo='img';salvar();clearTimeout(rr);rr=setTimeout(()=>pagina(a),300)};
+ p.onerror=()=>{const v=videoEl(i.url);let fim=0;const cair=()=>{if(fim++)return;i.tipo='iframe';salvar();v.replaceWith(quadro(i.url))};
+  v.addEventListener('loadedmetadata',()=>{fim++;i.tipo='video';salvar()});v.addEventListener('error',cair);setTimeout(()=>{if(!fim)cair()},8000);p.replaceWith(v)};
+ return p}
+let arr=null;
+const limpar=()=>document.querySelectorAll('.sobre-e,.sobre-d').forEach(x=>x.classList.remove('sobre-e','sobre-d'));
+function mover(o,s,alvo,depois){if(o.i===alvo)return;o.s.itens=o.s.itens.filter(x=>x!==o.i);s.itens.splice(s.itens.indexOf(alvo)+(depois?1:0),0,o.i);salvar();pagina(o.a)}
+function moverFim(o,s){o.s.itens=o.s.itens.filter(x=>x!==o.i);s.itens.push(o.i);salvar();pagina(o.a)}
+function item(a,s,i,fotos){
+ if(!http(i.url))return null;
+ const tb=h('div',{className:'tb'}),w=h('div',{className:'it'+(i.v?' vert':'')+(i.tw?' tw':'')});let m;
+ if(i.tipo==='img'){m=img(i.url);m.draggable=false;m.addEventListener('click',()=>lightbox(fotos.filter(x=>http(x.url)),fotos.filter(x=>http(x.url)).indexOf(i)));
+  tb.append(h('button',{title:'Usar como capa',on:{click:()=>{a.capa=i.url;salvar();aviso('Capa atualizada')}}},'Capa'))}
+ else{m=i.tipo==='iframe'?quadro(i.url):i.tipo==='auto'?sonda(a,i):videoEl(i.url);
+  if(i.tipo==='video')m.addEventListener('error',()=>m.replaceWith(h('a',{href:i.url,target:'_blank',rel:'noopener noreferrer',className:'falha'},'Vídeo não carregou. Abrir link')));
+  tb.append(h('span',{className:'mv',title:'Arraste para mudar a ordem',on:{pointerdown:()=>{w.draggable=true;document.addEventListener('pointerup',()=>{w.draggable=false},{once:true})}}},'⠿ Mover'));
+  tb.append(h('button',{title:'Alternar vertical e horizontal',on:{click:()=>{i.v=!i.v;salvar();w.classList.toggle('vert')}}},'Girar'))}
+ tb.append(h('a',{className:'mv',href:i.url,target:'_blank',rel:'noopener noreferrer',title:'Abrir o link original'},'↗'),h('button',{className:'x',title:'Remover',on:{click:()=>{s.itens=s.itens.filter(x=>x!==i);salvar();pagina(a)}}},'✕'));
+ w.draggable=i.tipo==='img';
+ w.addEventListener('dragstart',e=>{arr={a,s,i};e.dataTransfer.effectAllowed='move';e.dataTransfer.setData('text/plain','');setTimeout(()=>{w.classList.add('arr');document.body.classList.add('arrastando')})});
+ w.addEventListener('dragend',()=>{arr=null;w.classList.remove('arr');w.draggable=i.tipo==='img';document.body.classList.remove('arrastando');limpar()});
+ w.addEventListener('dragover',e=>{if(!arr||arr.i===i)return;e.preventDefault();const r=w.getBoundingClientRect(),esq=e.clientX<r.left+r.width/2;w.classList.toggle('sobre-e',esq);w.classList.toggle('sobre-d',!esq)});
+ w.addEventListener('dragleave',()=>w.classList.remove('sobre-e','sobre-d'));
+ w.addEventListener('drop',e=>{if(!arr)return;e.preventDefault();e.stopPropagation();mover(arr,s,i,w.classList.contains('sobre-d'))});
+ if(i.z)w.style.zoom=i.z;
+ const g=h('span',{className:'rz',title:'Arraste para mudar o tamanho (duplo clique volta ao normal)'},'◢');
+ g.addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();w.draggable=false;g.setPointerCapture(e.pointerId);
+  const x0=e.clientX,r0=w.getBoundingClientRect().width,z0=i.z||1;document.body.classList.add('arrastando');
+  const mv=ev=>{i.z=Math.min(4,Math.max(.3,z0*(r0+ev.clientX-x0)/r0));w.style.zoom=i.z};
+  const fim=()=>{g.removeEventListener('pointermove',mv);g.removeEventListener('pointerup',fim);g.removeEventListener('pointercancel',fim);w.draggable=i.tipo==='img';document.body.classList.remove('arrastando');if(i.z)i.z=+i.z.toFixed(3);salvar()};
+  g.addEventListener('pointermove',mv);g.addEventListener('pointerup',fim);g.addEventListener('pointercancel',fim)});
+ g.addEventListener('dblclick',()=>{delete i.z;w.style.zoom='';salvar()});
+ w.append(m,tb,g);return w}
+function lightbox(l,n){if(!l.length||n<0)return;let k=n;
+ const o=h('div',{className:'lb'}),im=h('img',{referrerPolicy:'no-referrer'}),c=h('span');
+ const go=d=>{k=(k+d+l.length)%l.length;im.src=l[k].url;c.textContent=(k+1)+' / '+l.length};
+ const fim=()=>{o.remove();document.removeEventListener('keydown',tk)};
+ const tk=e=>{if(e.key==='Escape')fim();else if(e.key==='ArrowRight')go(1);else if(e.key==='ArrowLeft')go(-1)};
+ o.append(im,h('button',{className:'lbp',title:'Anterior',on:{click:()=>go(-1)}},'‹'),h('button',{className:'lbn',title:'Próxima',on:{click:()=>go(1)}},'›'),h('button',{className:'lbx',title:'Fechar',on:{click:fim}},'✕'),c);
+ o.addEventListener('click',e=>{if(e.target===o)fim()});document.addEventListener('keydown',tk);document.body.append(o);go(0)}
+$('#nova').onclick=nova;
+$('#busca').oninput=e=>{busca=e.target.value;const r=location.hash;if(r==='#/fotos')galeria();else if(!r.startsWith('#/a/'))inicio()};
+$('#exp').onclick=()=>{const a=h('a',{href:URL.createObjectURL(new Blob([JSON.stringify(db,null,1)],{type:'application/json'})),download:'catalogo-backup-'+new Date().toISOString().slice(0,10)+'.json'});a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1500)};
+$('#imp').onchange=async e=>{const f=e.target.files[0];if(!f)return;
+ try{const d=JSON.parse(await f.text());if(!Array.isArray(d.atrizes))throw 0;if(!confirm('Substituir o catálogo atual pelo backup?'))return;db=d;db.cfg=db.cfg||{foto:220,video:360};salvar();aplicar();location.hash='#/';ir()}
+ catch(x){aviso('Arquivo de backup inválido')}finally{e.target.value=''}};
+const KS='catalogo-sync',GF='catalogo.json';
+let sync={};try{sync=JSON.parse(localStorage.getItem(KS))||{}}catch(e){}
+const salvaSync=()=>{try{localStorage.setItem(KS,JSON.stringify(sync))}catch(e){aviso('Não foi possível salvar a configuração da nuvem.',5000)}};
+const gid=s=>((s||'').match(/[0-9a-f]{20,40}/i)||[''])[0];
+const fdata=s=>new Date(s).toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'short'});
+const hdb=()=>{const t=JSON.stringify(db.atrizes);let x=5381;for(let k=0;k<t.length;k++)x=(x*33^t.charCodeAt(k))>>>0;return x+'.'+t.length};
+const sincInfo=()=>{$('#sinc').textContent=sync.ultima?'Nuvem: '+fdata(sync.ultima):sync.gist?'Nuvem: ainda não sincronizado':''};
+async function gh(path,op={}){let r;
+ try{r=await fetch('https://api.github.com'+path,{cache:'no-store',...op,headers:{Accept:'application/vnd.github+json',...(sync.token?{Authorization:'Bearer '+sync.token}:{}),...(op.body?{'Content-Type':'application/json'}:{})}})}
+ catch(e){throw 'Sem conexão com a internet (ou o GitHub está inacessível).'}
+ if(r.ok)return r.json();
+ throw r.status===401?'Token inválido ou expirado. Abra ⚙ para corrigir (ou apague o token para baixar só com o ID).':r.status===404?'Gist não encontrado. Confira o ID (e o token, se o gist for seu).':r.status===403||r.status===429?'O GitHub recusou: limite de requisições atingido ou token sem a permissão "gist".':'Erro do GitHub ('+r.status+').'}
+async function cfgNuvem(){
+ const r=await form('Nuvem (GitHub Gist)',[
+  {k:'tk',l:'Token do GitHub, só com permissão "gist" (fica apenas neste aparelho; apague para remover)',v:sync.token,t:'password',ph:'ghp_...'},
+  {k:'id',l:'ID do gist (em branco = criar um novo ao enviar)',v:sync.gist,ph:'Cole o ID ou o endereço do gist'}]);
+ if(!r)return false;const g=gid(r.id);
+ if(r.id&&!g){aviso('ID do gist inválido',5000);return false}
+ if(g!==(sync.gist||'')){delete sync.remoto;delete sync.ultima;delete sync.hash}
+ if(r.tk)sync.token=r.tk;else delete sync.token;
+ if(g)sync.gist=g;else delete sync.gist;
+ salvaSync();sincInfo();return true}
+async function enviar(){
+ if(!sync.token&&!await cfgNuvem())return;
+ if(!sync.token){aviso('Informe o token do GitHub para enviar.',5000);return}
+ const corpo=JSON.stringify(db);let d;
+ if(sync.gist){
+  const g=await gh('/gists/'+sync.gist);
+  if(g.updated_at!==sync.remoto&&!confirm(sync.remoto?'A nuvem foi alterada depois da última sincronização feita neste aparelho (nuvem: '+fdata(g.updated_at)+').\n\nEnviar vai SOBRESCREVER essas alterações. Continuar?':'Este aparelho ainda não sincronizou com esse gist e ele já tem conteúdo.\n\nEnviar vai SOBRESCREVER a nuvem. Continuar?'))return;
+  d=await gh('/gists/'+sync.gist,{method:'PATCH',body:JSON.stringify({files:{[GF]:{content:corpo}}})})}
+ else d=await gh('/gists',{method:'POST',body:JSON.stringify({description:'Catálogo (backup)',public:false,files:{[GF]:{content:corpo}}})});
+ Object.assign(sync,{gist:d.id,remoto:d.updated_at,ultima:new Date().toISOString(),hash:hdb()});salvaSync();sincInfo();aviso('Catálogo enviado para a nuvem')}
+async function baixar(){
+ if(!sync.gist&&!await cfgNuvem())return;
+ if(!sync.gist){aviso('Informe o ID do gist para baixar.',5000);return}
+ const g=await gh('/gists/'+sync.gist),f=g.files&&g.files[GF];
+ if(!f){aviso('O gist não tem o arquivo '+GF,5000);return}
+ let t=f.content;
+ if(f.raw_url){try{const r=await fetch(f.raw_url,{cache:'no-store'});if(!r.ok)throw 0;t=await r.text()}catch(e){if(f.truncated||!t)throw 'Não foi possível baixar o arquivo da nuvem.'}}
+ let d;try{d=JSON.parse(t)}catch(e){}
+ if(!d||!Array.isArray(d.atrizes)){aviso('O arquivo da nuvem não é um catálogo válido',5000);return}
+ if(!confirm('Baixar vai SUBSTITUIR o catálogo deste aparelho pelo da nuvem (atualizado em '+fdata(g.updated_at)+').'+(db.atrizes.length&&sync.hash!==hdb()?'\n\nATENÇÃO: este aparelho tem alterações que não foram enviadas para a nuvem e serão perdidas.':'')+'\n\nContinuar?'))return;
+ const cfg=db.cfg;db=d;db.cfg=cfg;salvar();aplicar();
+ Object.assign(sync,{remoto:g.updated_at,ultima:new Date().toISOString(),hash:hdb()});salvaSync();sincInfo();
+ location.hash='#/';ir();aviso('Catálogo baixado da nuvem')}
+let ocup=false;
+async function nuvem(fn){if(ocup)return;ocup=true;const b=[$('#env'),$('#bai')];b.forEach(x=>x.disabled=true);
+ try{await fn()}catch(e){aviso(typeof e==='string'?e:'Erro inesperado: '+(e&&e.message||e),6000)}finally{ocup=false;b.forEach(x=>x.disabled=false)}}
+$('#env').onclick=()=>nuvem(enviar);$('#bai').onclick=()=>nuvem(baixar);
+$('#cfgn').onclick=async()=>{if(await cfgNuvem())aviso('Configuração salva')};
+sincInfo();
+addEventListener('message',e=>{if(e.origin!=='https://platform.twitter.com')return;let d=e.data;try{if(typeof d==='string')d=JSON.parse(d)}catch(x){return}
+ const p=d&&d['twttr.embed'];if(!p||p.method!=='twttr.private.resize')return;const hh=p.params&&p.params[0]&&p.params[0].height;if(!hh)return;
+ document.querySelectorAll('.tw iframe').forEach(f=>{if(f.contentWindow===e.source)f.style.height=hh+'px'})});
+aplicar();ir();
+</script>
+</body>
+</html>
